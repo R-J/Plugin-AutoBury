@@ -20,9 +20,9 @@ $PluginInfo['AutoBury'] = array(
 	'Version' => '0.1',
 	'RequiredApplications' => array('Vanilla' => '2.2', 'Yaga' => '1.1'),
 	'MobileFriendly' => true,
-	'HasLocale' => TRUE,
-	'RegisterPermissions' => FALSE,
-    'SettingsUrl' => '/settings/autobury',
+	'HasLocale' => true,
+	'RegisterPermissions' => false,
+	'SettingsUrl' => '/settings/autobury',
 	'SettingsPermission' => 'Garden.Settings.Manage',
 	'Author' => 'Zachary Doll',
 	'AuthorEmail' => 'hgtonight@daklutz.com',
@@ -33,25 +33,25 @@ $PluginInfo['AutoBury'] = array(
 class AutoBury extends Gdn_Plugin {
 	
     public function settingsController_autoBury_create($sender) {
-        $sender->SetData('Title', $this->getPluginKey('Name'));
-        $sender->Permission('Garden.Settings.Manage');
-        $sender->SetData('PluginDescription', $this->GetPluginKey('Description'));
+        $sender->setData('Title', $this->getPluginKey('Name'));
+        $sender->permission('Garden.Settings.Manage');
+        $sender->setData('PluginDescription', $this->getPluginKey('Description'));
         $validation = new Gdn_Validation();
         $configurationModel = new Gdn_ConfigurationModel($validation);
-        $configurationModel->SetField(array(
+        $configurationModel->setField(array(
             'AutoBury.Threshold' => -5,
         ));
-        $sender->Form->SetModel($configurationModel);
+        $sender->Form->setModel($configurationModel);
         
-        if ($sender->Form->AuthenticatedPostBack() === FALSE) {
-            $sender->Form->SetData($configurationModel->Data);
+        if ($sender->Form->authenticatedPostBack() === false) {
+            $sender->Form->setData($configurationModel->Data);
         } else {
-            $configurationModel->Validation->ApplyRule('AutoBury.Threshold', 'Required');
-            if ($sender->Form->Save()) {
-                $sender->InformMessage('<span class="InformSprite Sliders"></span>' . T('Your changes have been saved.'), 'HasSprite');
+            $configurationModel->Validation->applyRule('AutoBury.Threshold', 'Required');
+            if ($sender->Form->save()) {
+                $sender->informMessage('<span class="InformSprite Sliders"></span>' . t('Your changes have been saved.'), 'HasSprite');
             }
         }
-        $sender->Render($this->GetView('settings.php'));
+        $sender->render($this->getView('settings.php'));
     }
     
     public function discussionsController_beforeDiscussionName_handler($sender) {
@@ -79,7 +79,7 @@ class AutoBury extends Gdn_Plugin {
 	
 	private function addResources($sender) {
         $sender->addDefinition('AutoBury.Translation', t('This item is buried, click to show'));
-		$sender->AddJsFile($this->GetResource('js/autobury.js', FALSE, FALSE));
-		$sender->AddCssFile($this->GetResource('design/autobury.css', FALSE, FALSE));
+		$sender->addJsFile($this->getResource('js/autobury.js', false, false));
+		$sender->addCssFile($this->getResource('design/autobury.css', false, false));
     }
 }
